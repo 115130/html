@@ -9,7 +9,6 @@ import (
 func main() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/hello", helloHandler)
-	http.HandleFunc("/h", helloHandler1)
 	log.Fatal(http.ListenAndServe(":9899", nil))
 }
 
