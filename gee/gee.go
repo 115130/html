@@ -3,13 +3,14 @@ package gee
 import (
 	"fmt"
 	"net/http"
+
 )
 
 
 type HandlerFunc func(http.ResponseWriter, *http.Request)
 
 type Engine struct{
-	router map[string]HandlerFunc
+	router *route
 }
 
 func New()*Engine{
