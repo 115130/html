@@ -6,14 +6,15 @@ import (
 	"net/http"
 )
 
-type H map[string]interface{}//interface类似Object
+type H map[string]interface{} //interface类似Object
 
 type Context struct {
-	Writer     http.ResponseWriter //
-	Req        *http.Request //request请求，包含所有
-	Path       string //当前路径
-	Method     string //请求方法
-	StatusCode int //请求状态
+	Writer     http.ResponseWriter //写出数据
+	Req        *http.Request       //request请求，包含所有
+	Path       string              //当前路径
+	Method     string              //请求方法
+	Params     map[string]string   //参数列表
+	StatusCode int                 //请求状态
 }
 
 func newContetx(w http.ResponseWriter, req *http.Request) *Context {
@@ -21,8 +22,18 @@ func newContetx(w http.ResponseWriter, req *http.Request) *Context {
 		Writer: w,
 		Req:    req,
 		Path:   req.URL.Path,
+		Params: nil,
 		Method: req.Method,
 	}
+}
+
+func (c *Context) Param(key string) string {
+	p := c.Params
+	if p != nil {
+		value, _ := p[key]
+		return value
+	}
+	return ""
 }
 
 //
@@ -64,13 +75,13 @@ func (c *Context) String(code int, format string, value ...interface{}) {
 	c.Writer.Write([]byte(fmt.Sprintf(format, value...)))
 }
 
- //传输字节码数据
+//传输字节码数据
 func (c *Context) Data(code int, data []byte) {
 	c.Status(code)
 	c.Writer.Write(data)
 }
 
- //传输html数据
+//传输html数据
 func (c *Context) HTML(code int, html string) {
 	c.Setheader("Content-Type", "text/html")
 	c.Status(code)
