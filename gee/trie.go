@@ -32,7 +32,7 @@ func (n *node) matchChildren(part string) []*node {
 	return nodes
 }
 
-//节点的插入，递归查找每一层节点，没有匹配到则插入（将url按照'/'分割后的数组传入解析）
+//节点的插入，递归查找每一层节点，没有匹配到则插入（将url按照'/'分割后的数组传入解析）节点按照'/'为分割线存储，每多一个分割线就存储一个子节点
 func (n *node) insert(pattern string, parts []string, height int /* 递归遍历用的下标 */) {
 	if len(parts) == height { //如果带匹配路径为空就直接插入
 		n.pattern = pattern
@@ -42,7 +42,7 @@ func (n *node) insert(pattern string, parts []string, height int /* 递归遍历
 	part := parts[height]
 	child := n.matchChild(part)
 	if child == nil {
-		child = &node{part: part, isWild: part[0] == ':' || part[0] == '*'} 
+		child = &node{part: part, isWild: part[0] == ':' || part[0] == '*'}
 		n.childern = append(n.childern, child)
 	}
 	child.insert(pattern, parts, height+1)
