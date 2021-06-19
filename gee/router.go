@@ -34,8 +34,9 @@ func parsePattern(pattern string) []string {
 		}
 	}
 	return parts
-}
+}//
 
+//添加route
 func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	log.Printf("Route %4s - %s", method, pattern)
 	parts := parsePattern(pattern)
@@ -48,6 +49,7 @@ func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	r.handlers[key] = handler
 }
 
+//获取route
 func (r *router) getRoute(method string, path string) (*node, map[string]string) {
 	searchParts := parsePattern(path)
 	params := make(map[string]string)
@@ -62,6 +64,10 @@ func (r *router) getRoute(method string, path string) (*node, map[string]string)
 		parts := parsePattern(n.pattern)
 		for index, part := range parts {
 			if part[0] == ':' {
+				params[part[1:]] = strings.Join(searchParts[index:], "/")
+				break
+			}
+			if part[0] == '*' && len(part) > 1 {
 				params[part[1:]] = strings.Join(searchParts[index:], "/")
 				break
 			}
