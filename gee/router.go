@@ -28,24 +28,24 @@ func parsePattern(pattern string) []string {
 	for _, item := range vs {
 		if item != "" {
 			parts = append(parts, item)
-			if item[0] == '*' {
+			if item[0] == '*' { //找到第一个带*的参数的组
 				break
 			}
 		}
 	}
 	return parts
-}//
+} //
 
 //添加route
 func (r *router) addRoute(method string, pattern string, handler HandlerFunc) {
 	log.Printf("Route %4s - %s", method, pattern)
-	parts := parsePattern(pattern)
+	parts := parsePattern(pattern) //解析路径
 	key := method + "-" + pattern
-	_, ok := r.roots[method]
-	if !ok {
+	_, ok := r.roots[method] //查看请求方法是否存在
+	if !ok {                 //不存在就存一个新的
 		r.roots[method] = &node{}
 	}
-	r.roots[method].insert(pattern, parts, 0)
+	r.roots[method].insert(pattern, parts /* 被用'/'分割过的路径 */, 0) 
 	r.handlers[key] = handler
 }
 
